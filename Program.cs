@@ -13,6 +13,11 @@ builder.Services.AddUserDefinedDependencies();
 
 var app = builder.Build();
 
+app.Map("/{*catchEverything}", () =>
+{
+    return Results.NotFound("NOT FOUND! :(");
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -23,4 +28,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run();
+app.Run(); 
+
+//TODO: test and debug
+//TODO: fix view models
+//TODO: fix update and deletem ids in serveices
+//TODO: try postman

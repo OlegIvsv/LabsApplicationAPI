@@ -9,47 +9,51 @@ namespace LabsApplicationAPI.Services
 {
     public class ProducerService : IProducerService
     {
-        private IUnitOfWork unitOfWork;
+        private IAppDatabase database;
         private IMapper mapper;
 
-        public ProducerService(IUnitOfWork uof, IMapper mapper)
+        public ProducerService(IAppDatabase database, IMapper mapper)
         {
-            this.unitOfWork = uof;
+            this.database = database;
             this.mapper = mapper;
         }
 
         public void AddProducer(Producer producer)
         {
             var data = mapper.Map<Producer, ProducerData>(producer);
-            unitOfWork.Producers.Insert(data);
+            database.Producers.Insert(data);
+            database.Complete();
         }
 
         public void DeleteProducer(Producer producer)
         {
             var data = mapper.Map<Producer, ProducerData>(producer);
-            unitOfWork.Producers.Delete(data);
+            database.Producers.Delete(data);
+            database.Complete();
         }
 
         public void DeleteProducer(int id)
         {
-            unitOfWork.Producers.Delete(id);
+            database.Producers.Delete(id);
+            database.Complete();
         }
 
         public Producer GetProducer(int id)
         {
-            var data = unitOfWork.Producers.Get(id);
+            var data = database.Producers.Get(id);
             return mapper.Map<ProducerData, Producer>(data);
         }
 
         public void UpdateProducer(Producer producer)
         {
             var data = mapper.Map<Producer, ProducerData>(producer);
-            unitOfWork.Producers.Update(data);
+            database.Producers.Update(data);
+            database.Complete();
         }
 
         public IList<Producer> GetAll()
         {
-            var data = unitOfWork.Producers.List();
+            var data = database.Producers.List();
             return data.Select(d => mapper.Map<ProducerData, Producer>(d))
                 .ToList();
         }

@@ -5,6 +5,7 @@ using LabsApplicationAPI.Models;
 using LabsApplicationAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Ninject.Infrastructure.Language;
 
 namespace LabsApplicationAPI.Controllers
@@ -23,36 +24,58 @@ namespace LabsApplicationAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<OrderVM> Get()
+        public IResult Get()
         {
             var data = orderService.GetAll();
-            return mapper.Map<IEnumerable<OrderVM>>(data);
+            var result = mapper.Map<IEnumerable<OrderVM>>(data);
+            return Results.Json(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int:min(1)}")]
         public object Get(int id)
         {
-            return orderService.GetOrder(id);
+            var data = orderService.GetOrder(id);
+
+            if (data is null)
+                return Results.BadRequest("Data was not found!");
+
+            mapper.Map<OrderVM>(data);
+            return Results.Json(data);
         }
 
         [HttpPost]
-        public void Post([FromBody] OrderVM order)
+        public IResult Post([FromBody]OrderVM order)
         {
-            var orders = mapper.Map <OrderVM, Order>(order);
+            if (ModelState.IsValid is false)
+            {
+                var errorDictionary = ModelState.AsValidationDictionary();
+                return Results.ValidationProblem(errorDictionary);
+            }
+
+            var orders = mapper.Map<OrderVM, Order>(order);
             orderService.AddOrder(orders);
+            return Results.Ok();
         }
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] OrderVM order)
+        [HttpPut("{id:int:min(1)}")]
+        public IResult Put([FromBody] OrderVM order)
         {
+            if (ModelState.IsValid is false)
+            {
+                var errorDictionary = ModelState.AsValidationDictionary();
+                return Results.ValidationProblem(errorDictionary);
+            }
+
             var o = mapper.Map<OrderVM, Order>(order);
             orderService.UpdateOrder(o);
+            return Results.Accepted();
         }
 
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id:int:min(1)}")]
+        public IResult Delete(int id)
         {
             orderService.DeleteOrder(id);
+            return Results.Ok();
         }
     }
 }

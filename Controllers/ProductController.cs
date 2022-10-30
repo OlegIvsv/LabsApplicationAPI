@@ -21,37 +21,62 @@ namespace LabsApplicationAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ProductVM> Get()
+        public IResult Get()
         {
             var products = productService.GetAll();
-            return mapper.Map<IEnumerable<ProductVM>>(products);
+            var result = mapper.Map<IEnumerable<ProductVM>>(products);
+            return Results.Ok(result);
         }
 
-        [HttpGet("{id}")]
-        public ProductVM Get(int id)
+        [HttpGet("{lower:int:min(0)}-{upper:int}")]
+        public IResult GetByPrice(int lower, int upper)
+        {
+            var products = productService.GetProductsByPriceRange(lower, upper);
+            var result =  mapper.Map<IEnumerable<ProductVM>>(products);
+            return Results.Ok(result);
+        }
+
+        [HttpGet("{id:int:min(1)}")]
+        public IResult Get(int id)
         {
             var p = productService.GetProduct(id);
-            return mapper.Map<ProductVM>(p);
+            var result = mapper.Map<ProductVM>(p);
+            return Results.Ok(result);
         }
 
         [HttpPost]
-        public void Post([FromBody] ProductVM product)
+        public IResult Post([FromBody] ProductVM product)
         {
+            if (ModelState.IsValid is false)
+            {
+                var errorDictionary = ModelState.AsValidationDictionary();
+                return Results.ValidationProblem(errorDictionary);
+            }
+
             var p = mapper.Map<ProductVM, Product>(product);
             productService.AddProduct(p);
+            return Results.Ok();
         }
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] ProductVM product)
+        [HttpPut("{id:int:min(1)}")]
+        public IResult Put(int id, [FromBody] ProductVM product)
         {
+            if (ModelState.IsValid is false)
+            {
+                var errorDictionary = ModelState.AsValidationDictionary();
+                return Results.ValidationProblem(errorDictionary);
+            }
+
             var p = mapper.Map<ProductVM, Product>(product);
             productService.UpdateProduct(p);
+            return Results.Ok();
         }
 
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id:int:min(1)}")]
+        public IResult Delete(int id)
         {
             productService.DeleteProduct(id);
+            return Results.Ok();
         }
     }
 }

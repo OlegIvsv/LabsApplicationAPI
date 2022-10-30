@@ -17,5 +17,7 @@ namespace LabsApplicationAPI.Interfaces
         void DeleteProduct(int id);
 
         void UpdateProduct(Product product);
+
+        IList<Product> GetProductsByPriceRange(int minPrice, int maxPrice);
     }
 }

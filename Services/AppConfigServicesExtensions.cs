@@ -10,23 +10,21 @@ namespace LabsApplicationAPI.Services
     {
         public static IServiceCollection AddUserDefinedDependencies(this IServiceCollection sc)
         {
-            var config = BuildConfig();
-            string connectionString = config.GetConnectionString("MainConnection");
 
-
-            sc.AddSingleton<IUnitOfWork, AdoUnitOfWork>(p => new(connectionString));
+            sc.AddSingleton<IAppDatabase, AdoDatabase>(
+                p => new(p.GetService<IConfiguration>()["ConnectionStrings:MainConnection"]));
 
             sc.AddSingleton<IProductService, ProductService>(
-                p => new(p.GetService<IUnitOfWork>()!, p.GetService<IMapper>()!));
+                p => new(p.GetService<IAppDatabase>()!, p.GetService<IMapper>()!));
 
             sc.AddSingleton<ICustomerService, CustomerService>(
-                p => new(p.GetService<IUnitOfWork>()!, p.GetService<IMapper>()!));
+                p => new(p.GetService<IAppDatabase>()!, p.GetService<IMapper>()!));
 
             sc.AddSingleton<IOrderService, OrderService>(
-                p => new(p.GetService<IUnitOfWork>()!, p.GetService<IMapper>()!));
+                p => new(p.GetService<IAppDatabase>()!, p.GetService<IMapper>()!));
 
             sc.AddSingleton<IProducerService, ProducerService>(
-                p => new(p.GetService<IUnitOfWork>()!, p.GetService<IMapper>()!));
+                p => new(p.GetService<IAppDatabase>()!, p.GetService<IMapper>()!));
 
             return sc;
         }
@@ -42,15 +40,6 @@ namespace LabsApplicationAPI.Services
             sc.AddAutoMapper(typeof(MappingProfile));
 
             return sc;
-        }
-
-        private static IConfigurationRoot BuildConfig()
-        {
-            var configBuilder = new ConfigurationBuilder();
-            configBuilder.SetBasePath(Directory.GetCurrentDirectory());
-            configBuilder.AddJsonFile("appsettings.json");
-
-            return configBuilder.Build();
         }
     }
 }

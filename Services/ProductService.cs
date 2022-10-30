@@ -10,12 +10,12 @@ namespace LabsApplicationAPI.Services
 
     public class ProductService : IProductService
     {
-        private IUnitOfWork unitOfWork;
+        private IAppDatabase database;
         private IMapper mapper;
 
-        public ProductService(IUnitOfWork uof, IMapper mapper)
+        public ProductService(IAppDatabase database, IMapper mapper)
         {
-            this.unitOfWork = uof;
+            this.database = database;
             this.mapper = mapper;
         }
 
@@ -23,35 +23,46 @@ namespace LabsApplicationAPI.Services
         public void AddProduct(Product product)
         {
             var data = mapper.Map<Product, ProductData>(product);
-            unitOfWork.Products.Insert(data);
+            database.Products.Insert(data);
+            database.Complete();
         }
 
         public void DeleteProduct(Product product)
         {
             var data = mapper.Map<Product, ProductData>(product);
-            unitOfWork.Products.Delete(data);
+            database.Products.Delete(data);
+            database.Complete();
         }
 
         public void DeleteProduct(int id)
         {
-            unitOfWork.Products.Delete(id);
+            database.Products.Delete(id);
+            database.Complete();
         }
 
         public void UpdateProduct(Product product)
         {
             var data = mapper.Map<Product, ProductData>(product);
-            unitOfWork.Products.Update(data);
+            database.Products.Update(data);
+            database.Complete();
         }
 
         public Product GetProduct(int id)
         {
-            var data = unitOfWork.Products.Get(id);
+            var data = database.Products.Get(id);
             return mapper.Map<ProductData, Product>(data);
         }
 
         public IList<Product> GetAll()
         {
-            var data = unitOfWork.Products.List();
+            var data = database.Products.List();
+            return data.Select(d => mapper.Map<ProductData, Product>(d))
+                .ToList();
+        }
+
+        public IList<Product> GetProductsByPriceRange(int minPrice, int maxPrice)
+        {
+            var data = database.Products.List(p => p.Price >= minPrice && p.Price <= maxPrice);
             return data.Select(d => mapper.Map<ProductData, Product>(d))
                 .ToList();
         }
