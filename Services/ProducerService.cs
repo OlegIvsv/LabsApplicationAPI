@@ -1,27 +1,33 @@
-﻿using LabsApplication.DTOModels;
-using LabsApplication.UnitOfWork.EF.Models;
+﻿using AutoMapper;
+using LabsApplication.DTOModels;
+using LabsApplicationAPI.Models;
 using LabsApplication.UnitOfWork.Interfaces;
 using LabsApplicationAPI.Interfaces;
+using LabsApplicationAPI.Mapping;
 
 namespace LabsApplicationAPI.Services
 {
     public class ProducerService : IProducerService
     {
         private IUnitOfWork unitOfWork;
+        private IMapper mapper;
 
-        public ProducerService(IUnitOfWork uof)
+        public ProducerService(IUnitOfWork uof, IMapper mapper)
         {
             this.unitOfWork = uof;
+            this.mapper = mapper;
         }
 
-        public void AddProducer(ProducerDTO producer)
+        public void AddProducer(Producer producer)
         {
-            unitOfWork.Producers.Insert(producer);
+            var data = mapper.Map<Producer, ProducerData>(producer);
+            unitOfWork.Producers.Insert(data);
         }
 
-        public void DeleteProducer(ProducerDTO producer)
+        public void DeleteProducer(Producer producer)
         {
-            unitOfWork.Producers.Delete(producer);
+            var data = mapper.Map<Producer, ProducerData>(producer);
+            unitOfWork.Producers.Delete(data);
         }
 
         public void DeleteProducer(int id)
@@ -29,19 +35,23 @@ namespace LabsApplicationAPI.Services
             unitOfWork.Producers.Delete(id);
         }
 
-        public ProducerDTO GetProducer(int id)
+        public Producer GetProducer(int id)
         {
-            return unitOfWork.Producers.Get(id);
+            var data = unitOfWork.Producers.Get(id);
+            return mapper.Map<ProducerData, Producer>(data);
         }
 
-        public void UpdateProducer(ProducerDTO producer)
+        public void UpdateProducer(Producer producer)
         {
-            unitOfWork.Producers.Update(producer);
+            var data = mapper.Map<Producer, ProducerData>(producer);
+            unitOfWork.Producers.Update(data);
         }
 
-        public IList<ProducerDTO> GetAll()
+        public IList<Producer> GetAll()
         {
-            return unitOfWork.Producers.List();
+            var data = unitOfWork.Producers.List();
+            return data.Select(d => mapper.Map<ProducerData, Producer>(d))
+                .ToList();
         }
     }
 }

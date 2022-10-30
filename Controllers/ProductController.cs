@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LabsApplication.DTOModels;
 using LabsApplicationAPI.Interfaces;
+using LabsApplicationAPI.Models;
 using LabsApplicationAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,29 +21,31 @@ namespace LabsApplicationAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<object> Get()
+        public IEnumerable<ProductVM> Get()
         {
-            return productService.GetAll();
+            var products = productService.GetAll();
+            return mapper.Map<IEnumerable<ProductVM>>(products);
         }
 
         [HttpGet("{id}")]
-        public object Get(int id)
+        public ProductVM Get(int id)
         {
-            return productService.GetProduct(id);
+            var p = productService.GetProduct(id);
+            return mapper.Map<ProductVM>(p);
         }
 
         [HttpPost]
         public void Post([FromBody] ProductVM product)
         {
-            var dtoModel = mapper.Map<ProductVM, ProductDTO>(product);
-            productService.AddProduct(dtoModel);
+            var p = mapper.Map<ProductVM, Product>(product);
+            productService.AddProduct(p);
         }
 
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] ProductVM product)
         {
-            var dtoModel = mapper.Map<ProductVM, ProductDTO>(product);
-            productService.UpdateProduct(dtoModel);
+            var p = mapper.Map<ProductVM, Product>(product);
+            productService.UpdateProduct(p);
         }
 
         [HttpDelete("{id}")]

@@ -1,20 +1,20 @@
 ﻿using LabsApplication.DTOModels;
-using LabsApplication.UnitOfWork.EF.Models;
+using LabsApplicationAPI.Models;
 
 namespace LabsApplicationAPI.Interfaces
 {
     public interface IProducerService
     {
-        ProducerDTO GetProducer(int id);
+        Producer GetProducer(int id);
 
-        void AddProducer(ProducerDTO producer);
+        void AddProducer(Producer producer);
 
-        void DeleteProducer(ProducerDTO producer);
+        void DeleteProducer(Producer producer);
         
         void DeleteProducer(int id);
 
-        void UpdateProducer(ProducerDTO producer);
+        void UpdateProducer(Producer producer);
 
-        IList<ProducerDTO> GetAll();
+        IList<Producer> GetAll();
     }
 }

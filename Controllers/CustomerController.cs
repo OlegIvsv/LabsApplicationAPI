@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LabsApplication.DTOModels;
-using LabsApplication.UnitOfWork.EF.Models;
 using LabsApplicationAPI.Interfaces;
+using LabsApplicationAPI.Models;
 using LabsApplicationAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,29 +23,32 @@ namespace LabsApplicationAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<object> Get()
+        public IEnumerable<CustomerVM> Get()
         {
-            return customerService.GetAll();
+            var customers = customerService.GetAll();
+            return mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerVM>>(customers);
         }
 
         [HttpGet("{id}")]
-        public object Get(int id)
+        public CustomerVM Get(int id)
         {
-            return customerService.GetCustomer(id);
+            var data = customerService.GetCustomer(id);
+            return mapper.Map<CustomerVM>(data);    
+
         }
 
         [HttpPost]
         public void Post([FromBody] CustomerVM customer)
         {
-            var dtoModel = mapper.Map<CustomerVM, CustomerDTO>(customer);
-            customerService.AddCustomer(dtoModel);
+            var c = mapper.Map<CustomerVM, Customer>(customer);
+            customerService.AddCustomer(c);
         }
 
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] CustomerVM customer)
         {
-            var dtoModel = mapper.Map<CustomerVM, CustomerDTO>(customer);
-            customerService.UpdateCustomer(dtoModel);
+            var c = mapper.Map<CustomerVM, Customer>(customer);
+            customerService.UpdateCustomer(c);
         }
 
         [HttpDelete("{id}")]

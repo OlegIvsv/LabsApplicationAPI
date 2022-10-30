@@ -1,27 +1,33 @@
 ﻿using LabsApplicationAPI.Interfaces;
 using LabsApplication.UnitOfWork.Interfaces;
-using LabsApplication.UnitOfWork.EF.Models;
 using LabsApplication.DTOModels;
+using AutoMapper;
+using LabsApplicationAPI.Models;
+
 
 namespace LabsApplicationAPI.Services
 {
     public class CustomerService : ICustomerService
     {
         private IUnitOfWork unitOfWork;
+        private IMapper mapper; 
 
-        public CustomerService(IUnitOfWork uof)
+        public CustomerService(IUnitOfWork uof, IMapper mapper)
         {
             this.unitOfWork = uof;
+            this.mapper = mapper;
         }
 
-        public void AddCustomer(CustomerDTO customer)
+        public void AddCustomer(Customer customer)
         {
-            unitOfWork.Customers.Insert(customer);
+            var data = mapper.Map<Customer, CustomerData>(customer);
+            unitOfWork.Customers.Insert(data);
         }
 
-        public void DeleteCustomer(CustomerDTO customer)
+        public void DeleteCustomer(Customer customer)
         {
-            unitOfWork.Customers.Delete(customer);
+            var data = mapper.Map<Customer, CustomerData>(customer);
+            unitOfWork.Customers.Delete(data);
         }
 
         public void DeleteCustomer(int id)
@@ -29,19 +35,23 @@ namespace LabsApplicationAPI.Services
             unitOfWork.Customers.Delete(id);
         }
 
-        public void UpdateCustomer(CustomerDTO customer)
+        public void UpdateCustomer(Customer customer)
         {
-            unitOfWork.Customers.Update(customer);
+            var data = mapper.Map<Customer, CustomerData>(customer);
+            unitOfWork.Customers.Update(data);
         }
 
-        public CustomerDTO GetCustomer(int id)
+        public Customer GetCustomer(int id)
         {
-            return unitOfWork.Customers.Get(id);
+            var data = unitOfWork.Customers.Get(id);
+            return mapper.Map<CustomerData, Customer>(data);
         }
 
-        public IList<CustomerDTO> GetAll()
+        public IList<Customer> GetAll()
         {
-            return unitOfWork.Customers.List();
+            var data = unitOfWork.Customers.List();
+            return data.Select( d => mapper.Map<CustomerData, Customer>(d))
+                .ToList();
         }
     }
 }

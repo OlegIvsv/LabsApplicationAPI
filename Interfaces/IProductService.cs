@@ -1,21 +1,21 @@
 ﻿
 using LabsApplication.DTOModels;
-using LabsApplication.UnitOfWork.EF.Models;
+using LabsApplicationAPI.Models;
 
 namespace LabsApplicationAPI.Interfaces
 {
     public interface IProductService
     {
-        ProductDTO GetProduct(int id);
+        Product GetProduct(int id);
 
-        void AddProduct(ProductDTO product);
+        void AddProduct(Product product);
 
-        IList<ProductDTO> GetAll();
+        IList<Product> GetAll();
 
-        void DeleteProduct(ProductDTO product);
+        void DeleteProduct(Product product);
 
         void DeleteProduct(int id);
 
-        void UpdateProduct(ProductDTO product);
+        void UpdateProduct(Product product);
     }
 }

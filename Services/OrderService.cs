@@ -1,28 +1,33 @@
-﻿using LabsApplication.DTOModels;
-using LabsApplication.UnitOfWork.EF.Models;
+﻿using AutoMapper;
+using LabsApplication.DTOModels;
 using LabsApplication.UnitOfWork.Interfaces;
 using LabsApplicationAPI.Interfaces;
+using LabsApplicationAPI.Models;
 
 namespace LabsApplicationAPI.Services
 {
     public class OrderService : IOrderService
     {
         private IUnitOfWork unitOfWork;
+        private IMapper mapper;
 
-        public OrderService(IUnitOfWork uof)
+        public OrderService(IUnitOfWork uof, IMapper mapper)
         {
             this.unitOfWork = uof;
+            this.mapper = mapper;
         }
 
 
-        public void AddOrder(OrderDTO order)
+        public void AddOrder(Order order)
         {
-            unitOfWork.Orders.Insert(order);
+            var data = mapper.Map<Order, OrderData>(order);
+            unitOfWork.Orders.Insert(data);
         }
 
-        public void DeleteOrder(OrderDTO order)
+        public void DeleteOrder(Order order)
         {
-            unitOfWork.Orders.Delete(order);
+            var data = mapper.Map<Order, OrderData>(order);
+            unitOfWork.Orders.Delete(data);
         }
 
         public void DeleteOrder(int id)
@@ -30,19 +35,23 @@ namespace LabsApplicationAPI.Services
             unitOfWork.Orders.Delete(id);
         }
 
-        public OrderDTO GetOrder(int id)
+        public Order GetOrder(int id)
         {
-           return unitOfWork.Orders.Get(id);
+           var data = unitOfWork.Orders.Get(id);
+           return mapper.Map<OrderData, Order>(data);
         }
 
-        public IList<OrderDTO> GetAll()
+        public IList<Order> GetAll()
         {
-            return unitOfWork.Orders.List();
+            var data = unitOfWork.Orders.List();
+            return data.Select(d => mapper.Map<OrderData, Order>(d))
+                .ToList();
         }
 
-        public void UpdateOrder(OrderDTO order)
+        public void UpdateOrder(Order order)
         {
-            unitOfWork.Orders.Update(order);
+            var data = mapper.Map<Order, OrderData>(order);
+            unitOfWork.Orders.Update(data);
         }
     }
 }

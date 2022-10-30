@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LabsApplication.DTOModels;
-using LabsApplication.UnitOfWork.EF.Models;
+using LabsApplicationAPI.Models;
 using LabsApplicationAPI.ViewModels;
 
 namespace LabsApplicationAPI.Mapping
@@ -9,17 +9,31 @@ namespace LabsApplicationAPI.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<ProductDTO, ProductVM>();
-            CreateMap<ProductVM, ProductDTO>();
+            // Busines model model to data model
+            CreateMap<ProductData, Product>();
+            CreateMap<Product, ProductData>();
 
-            CreateMap<OrderDTO, OrderVM>();
-            CreateMap<OrderVM, OrderDTO>();
+            CreateMap<OrderData, Order>();
+            CreateMap<Order, OrderData>();
 
-            CreateMap<ProducerDTO, ProductVM>();
-            CreateMap<ProductVM, ProducerDTO>();
+            CreateMap<ProducerData, Product>();
+            CreateMap<Product, ProducerData>();
 
-            CreateMap<CustomerDTO, CustomerVM>();
-            CreateMap<CustomerVM, CustomerDTO>();
+            CreateMap<CustomerData, Customer>();
+            CreateMap<Customer, CustomerData>();
+
+            // View model to busines model
+            CreateMap<Product, ProductVM>();
+            CreateMap<ProductVM, Product>();
+
+            CreateMap<Order, OrderVM>();
+            CreateMap<OrderVM, Order>();
+
+            CreateMap<Producer, ProducerVM>();
+            CreateMap<ProducerVM, Producer>();
+
+            CreateMap<Customer, CustomerVM>();
+            CreateMap<CustomerVM, Customer>();
         }
     }
 }

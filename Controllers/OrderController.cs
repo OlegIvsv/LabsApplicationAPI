@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using LabsApplication.DTOModels;
 using LabsApplicationAPI.Interfaces;
+using LabsApplicationAPI.Models;
 using LabsApplicationAPI.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Ninject.Infrastructure.Language;
 
 namespace LabsApplicationAPI.Controllers
 {
@@ -21,9 +23,10 @@ namespace LabsApplicationAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<object> Get()
+        public IEnumerable<OrderVM> Get()
         {
-            return orderService.GetAll();
+            var data = orderService.GetAll();
+            return mapper.Map<IEnumerable<OrderVM>>(data);
         }
 
         [HttpGet("{id}")]
@@ -35,15 +38,15 @@ namespace LabsApplicationAPI.Controllers
         [HttpPost]
         public void Post([FromBody] OrderVM order)
         {
-            var dtoModel = mapper.Map <OrderVM, OrderDTO> (order);
-            orderService.AddOrder(dtoModel);
+            var orders = mapper.Map <OrderVM, Order>(order);
+            orderService.AddOrder(orders);
         }
 
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] OrderVM order)
         {
-            var dtoModel = mapper.Map<OrderVM, OrderDTO>(order);
-            orderService.UpdateOrder(dtoModel);
+            var o = mapper.Map<OrderVM, Order>(order);
+            orderService.UpdateOrder(o);
         }
 
         [HttpDelete("{id}")]

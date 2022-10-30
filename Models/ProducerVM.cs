@@ -1,6 +1,6 @@
-﻿namespace LabsApplicationAPI.ViewModels
+﻿namespace LabsApplicationAPI.Models
 {
-    public class ProducerVM
+    public class Producer
     {
         public int Id { get; set; }
 

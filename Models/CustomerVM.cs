@@ -1,6 +1,6 @@
-﻿namespace LabsApplicationAPI.ViewModels
+﻿namespace LabsApplicationAPI.Models
 {
-    public class CustomerVM
+    public class Customer
     {
         public int Id { get; set; }
 

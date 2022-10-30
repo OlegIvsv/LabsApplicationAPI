@@ -18,8 +18,4 @@
     <ProjectReference Include="..\LabsApplication\LabsApplication.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Infrastructure\" />
-  </ItemGroup>
-
 </Project>

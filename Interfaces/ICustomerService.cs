@@ -1,20 +1,20 @@
 ﻿using LabsApplication.DTOModels;
-using LabsApplication.UnitOfWork.EF.Models;
+using LabsApplicationAPI.Models;
 
 namespace LabsApplicationAPI.Interfaces
 {
     public interface ICustomerService
     {
-        CustomerDTO GetCustomer(int id);
+        Customer GetCustomer(int id);
 
-        IList<CustomerDTO> GetAll();
+        IList<Customer> GetAll();
 
-        void AddCustomer(CustomerDTO customer);
+        void AddCustomer(Customer customer);
 
-        void DeleteCustomer(CustomerDTO customer);
+        void DeleteCustomer(Customer customer);
 
         void DeleteCustomer(int id);
 
-        void UpdateCustomer(CustomerDTO customer);
+        void UpdateCustomer(Customer customer);
     }
 }

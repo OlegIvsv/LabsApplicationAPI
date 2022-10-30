@@ -1,20 +1,20 @@
 ﻿using LabsApplication.DTOModels;
-using LabsApplication.UnitOfWork.EF.Models;
+using LabsApplicationAPI.Models;
 
 namespace LabsApplicationAPI.Interfaces
 {
     public interface IOrderService
     {
-        OrderDTO GetOrder(int id);
+        Order GetOrder(int id);
 
-        IList<OrderDTO> GetAll();
+        IList<Order> GetAll();
 
-        void AddOrder(OrderDTO order);
+        void AddOrder(Order order);
 
-        void DeleteOrder(OrderDTO order);
+        void DeleteOrder(Order order);
 
         void DeleteOrder(int id);
 
-        void UpdateOrder(OrderDTO order);
+        void UpdateOrder(Order order);
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace LabsApplicationAPI.ViewModels
+﻿namespace LabsApplicationAPI.Models
 {
-    public class OrderVM
+    public class Order
     {
         public int Id { get; set; }
 

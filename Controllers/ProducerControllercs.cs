@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using LabsApplication.DTOModels;
 using LabsApplicationAPI.Interfaces;
+using LabsApplicationAPI.Models;
 using LabsApplicationAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace LabsApplicationAPI.Controllers
 {
@@ -21,30 +20,33 @@ namespace LabsApplicationAPI.Controllers
             this.mapper = mapper;
         }
 
+
         [HttpGet]
-        public IEnumerable<object> Get()
+        public IEnumerable<ProducerVM> Get()
         {
-            return producerService.GetAll();
+            var producers = producerService.GetAll();
+            return mapper.Map<IEnumerable<ProducerVM>>(producers);
         }
 
         [HttpGet("{id}")]
-        public object Get(int id)
+        public ProducerVM Get(int id)
         {
-            return producerService.GetProducer(id);
+            var p = producerService.GetProducer(id);
+            return mapper.Map<ProducerVM>(p);
         }
 
         [HttpPost]
         public void Post([FromBody] ProducerVM producer)
         {
-            var dtoModel = mapper.Map<ProducerVM, ProducerDTO>(producer);
-            producerService.AddProducer(dtoModel);
+            var p = mapper.Map<ProducerVM, Producer>(producer);
+            producerService.AddProducer(p);
         }
 
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] ProducerVM producer)
         {
-            var dtoModel = mapper.Map<ProducerVM, ProducerDTO>(producer);
-            producerService.UpdateProducer(dtoModel);
+            var p = mapper.Map<ProducerVM, Producer>(producer);
+            producerService.UpdateProducer(p);
         }
 
         [HttpDelete("{id}")]
