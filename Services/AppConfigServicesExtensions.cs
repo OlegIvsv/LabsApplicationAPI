@@ -10,7 +10,10 @@ namespace LabsApplicationAPI.Services
     {
         public static IServiceCollection AddUserDefinedDependencies(this IServiceCollection sc)
         {
-            string connectionString = "Server=DESKTOP-9CVRRHV;Database=LabsApplicationDb;Trusted_Connection=True;Encrypt=False;";
+            var config = BuildConfig();
+            string connectionString = config.GetConnectionString("MainConnection");
+
+
             sc.AddSingleton<IUnitOfWork, AdoUnitOfWork>(p => new(connectionString));
 
             sc.AddSingleton<IProductService, ProductService>(
@@ -39,6 +42,15 @@ namespace LabsApplicationAPI.Services
             sc.AddAutoMapper(typeof(MappingProfile));
 
             return sc;
+        }
+
+        private static IConfigurationRoot BuildConfig()
+        {
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.SetBasePath(Directory.GetCurrentDirectory());
+            configBuilder.AddJsonFile("appsettings.json");
+
+            return configBuilder.Build();
         }
     }
 }
