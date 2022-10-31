@@ -21,6 +21,9 @@ namespace LabsApplicationAPI.Services
         public void AddOrder(Order order)
         {
             var data = mapper.Map<Order, OrderData>(order);
+            //set time here
+            data.CreationTime = DateTime.Now;
+
             database.Orders.Insert(data);
             database.Complete();
         }
@@ -53,8 +56,10 @@ namespace LabsApplicationAPI.Services
 
         public void UpdateOrder(Order order)
         {
-            var data = mapper.Map<Order, OrderData>(order);
-            database.Orders.Update(data);
+            var orderData = database.Orders.Get(order.Id);
+            mapper.Map(order, orderData);
+
+            database.Orders.Update(orderData);
             database.Complete();
         }
     }

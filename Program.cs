@@ -32,5 +32,3 @@ app.Run();
 
 //TODO: test and debug
 //TODO: fix view models
-//TODO: fix update and deletem ids in serveices
-//TODO: try postman

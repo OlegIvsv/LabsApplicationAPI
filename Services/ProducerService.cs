@@ -46,8 +46,10 @@ namespace LabsApplicationAPI.Services
 
         public void UpdateProducer(Producer producer)
         {
-            var data = mapper.Map<Producer, ProducerData>(producer);
-            database.Producers.Update(data);
+            var p = database.Producers.Get(producer.Id);
+            mapper.Map(producer, p);
+            
+            database.Producers.Update(p);
             database.Complete();
         }
 

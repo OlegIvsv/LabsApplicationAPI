@@ -40,12 +40,16 @@ namespace LabsApplicationAPI.Controllers
         public IResult Get(int id)
         {
             var p = productService.GetProduct(id);
+
+            if (p is null)
+                return Results.BadRequest();
+
             var result = mapper.Map<ProductVM>(p);
             return Results.Ok(result);
         }
 
         [HttpPost]
-        public IResult Post([FromBody] ProductVM product)
+        public IResult Post([FromBody] NewProductVM product)
         {
             if (ModelState.IsValid is false)
             {
@@ -53,7 +57,7 @@ namespace LabsApplicationAPI.Controllers
                 return Results.ValidationProblem(errorDictionary);
             }
 
-            var p = mapper.Map<ProductVM, Product>(product);
+            var p = mapper.Map<NewProductVM, Product>(product);
             productService.AddProduct(p);
             return Results.Ok();
         }
@@ -67,7 +71,8 @@ namespace LabsApplicationAPI.Controllers
                 return Results.ValidationProblem(errorDictionary);
             }
 
-            var p = mapper.Map<ProductVM, Product>(product);
+            var p = productService.GetProduct(id); 
+            mapper.Map(product, p);
             productService.UpdateProduct(p);
             return Results.Ok();
         }

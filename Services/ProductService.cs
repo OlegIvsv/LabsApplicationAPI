@@ -42,7 +42,8 @@ namespace LabsApplicationAPI.Services
 
         public void UpdateProduct(Product product)
         {
-            var data = mapper.Map<Product, ProductData>(product);
+            var data = database.Products.Get(product.Id); 
+            mapper.Map<Product, ProductData>(product, data);
             database.Products.Update(data);
             database.Complete();
         }

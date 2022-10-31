@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LabsApplication.AdoNet;
 using LabsApplication.UnitOfWork.Interfaces;
+using LabsApplication.UnitOfWork.Repositories;
 using LabsApplicationAPI.Interfaces;
 using LabsApplicationAPI.Mapping;
 
@@ -11,7 +12,10 @@ namespace LabsApplicationAPI.Services
         public static IServiceCollection AddUserDefinedDependencies(this IServiceCollection sc)
         {
 
-            sc.AddSingleton<IAppDatabase, AdoDatabase>(
+            //sc.AddSingleton<IAppDatabase, AdoDatabase>(
+            //    p => new(p.GetService<IConfiguration>()["ConnectionStrings:MainConnection"]));
+
+            sc.AddSingleton<IAppDatabase, EfDatabase>(
                 p => new(p.GetService<IConfiguration>()["ConnectionStrings:MainConnection"]));
 
             sc.AddSingleton<IProductService, ProductService>(

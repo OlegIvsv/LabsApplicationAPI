@@ -40,8 +40,10 @@ namespace LabsApplicationAPI.Services
 
         public void UpdateCustomer(Customer customer)
         {
-            var data = mapper.Map<Customer, CustomerData>(customer);
-            database.Customers.Update(data);
+            var c = database.Customers.Get(customer.Id);
+            mapper.Map(customer, c);
+
+            database.Customers.Update(c);
             database.Complete();
         }
 

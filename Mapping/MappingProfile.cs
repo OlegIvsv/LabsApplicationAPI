@@ -16,8 +16,8 @@ namespace LabsApplicationAPI.Mapping
             CreateMap<OrderData, Order>();
             CreateMap<Order, OrderData>();
 
-            CreateMap<ProducerData, Product>();
-            CreateMap<Product, ProducerData>();
+            CreateMap<ProducerData, Producer>();
+            CreateMap<Producer, ProducerData>();
 
             CreateMap<CustomerData, Customer>();
             CreateMap<Customer, CustomerData>();
@@ -34,6 +34,12 @@ namespace LabsApplicationAPI.Mapping
 
             CreateMap<Customer, CustomerVM>();
             CreateMap<CustomerVM, Customer>();
+
+
+            CreateMap<NewCustomerVM, Customer>();
+            CreateMap<NewOrderVM, Order>();
+            CreateMap<NewProducerVM, Producer>();
+            CreateMap<NewProductVM, Product>();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using LabsApplication.DTOModels;
 using LabsApplicationAPI.Interfaces;
 using LabsApplicationAPI.Models;
@@ -37,22 +38,22 @@ namespace LabsApplicationAPI.Controllers
             var data = customerService.GetCustomer(id);
 
             if(data is null)
-                return Results.BadRequest("Data was not found!");
+                return Results.NotFound();
             
-            mapper.Map<CustomerVM>(data);
-            return Results.Ok(data);
+            var result = mapper.Map<CustomerVM>(data);
+            return Results.Ok(result);
         }
 
         [HttpPost]
-        public IResult Post([FromBody] CustomerVM customer)
+        public IResult Post([FromBody] NewCustomerVM customer)
         {          
             if (ModelState.IsValid is false)
             {
                 var errorDictionary = ModelState.AsValidationDictionary();
                 return Results.ValidationProblem(errorDictionary);
             }
-
-            var c = mapper.Map<CustomerVM, Customer>(customer);
+            
+            var c = mapper.Map<NewCustomerVM, Customer>(customer);
             customerService.AddCustomer(c);
             return Results.Ok();
         }
@@ -66,7 +67,8 @@ namespace LabsApplicationAPI.Controllers
                 return Results.ValidationProblem(errorDictionary);
             }
 
-            var c = mapper.Map<CustomerVM, Customer>(customer);
+            var c = customerService.GetCustomer(customer.Id);
+            mapper.Map(customer, c);
             customerService.UpdateCustomer(c);
             return Results.Ok();
         }

@@ -2,13 +2,8 @@
 
 namespace LabsApplicationAPI.ViewModels
 {
-    public class ProducerVM
+    public class NewProducerVM
     {
-        [Required]
-        [Range(minimum: 1, maximum: int.MaxValue)]
-        public int Id { get; set; }
-
-
         [RegularExpression(@"[a-zA-Z\s]{2,32}")]
         public string Name { get; set; } = null!;
 

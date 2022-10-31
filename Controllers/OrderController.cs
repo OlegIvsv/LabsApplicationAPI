@@ -37,14 +37,14 @@ namespace LabsApplicationAPI.Controllers
             var data = orderService.GetOrder(id);
 
             if (data is null)
-                return Results.BadRequest("Data was not found!");
+                return Results.NotFound();
 
             mapper.Map<OrderVM>(data);
             return Results.Json(data);
         }
 
         [HttpPost]
-        public IResult Post([FromBody]OrderVM order)
+        public IResult Post([FromBody]NewOrderVM order)
         {
             if (ModelState.IsValid is false)
             {
@@ -52,8 +52,8 @@ namespace LabsApplicationAPI.Controllers
                 return Results.ValidationProblem(errorDictionary);
             }
 
-            var orders = mapper.Map<OrderVM, Order>(order);
-            orderService.AddOrder(orders);
+            var newOrder = mapper.Map<NewOrderVM, Order>(order);
+            orderService.AddOrder(newOrder);
             return Results.Ok();
         }
 
@@ -66,9 +66,11 @@ namespace LabsApplicationAPI.Controllers
                 return Results.ValidationProblem(errorDictionary);
             }
 
-            var o = mapper.Map<OrderVM, Order>(order);
+            var o = orderService.GetOrder(order.Id);
+            mapper.Map(order, o);
+
             orderService.UpdateOrder(o);
-            return Results.Accepted();
+            return Results.Ok();
         }
 
         [HttpDelete("{id:int:min(1)}")]

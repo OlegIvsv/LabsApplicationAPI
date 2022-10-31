@@ -34,14 +34,14 @@ namespace LabsApplicationAPI.Controllers
         {
             var p = producerService.GetProducer(id);
             if(p is null)
-                return Results.BadRequest("Data was not found!");
+                return Results.NotFound();
 
             var result = mapper.Map<ProducerVM>(p);
             return Results.Json(result);
         }
 
         [HttpPost]
-        public IResult Post([FromBody] ProducerVM producer)
+        public IResult Post([FromBody] NewProducerVM producer)
         {
             if (ModelState.IsValid is false)
             {
@@ -49,7 +49,7 @@ namespace LabsApplicationAPI.Controllers
                 return Results.ValidationProblem(errorDictionary);
             }
 
-            var p = mapper.Map<ProducerVM, Producer>(producer);
+            var p = mapper.Map<NewProducerVM, Producer>(producer);
             producerService.AddProducer(p);
             return Results.Ok();
         }
@@ -63,7 +63,8 @@ namespace LabsApplicationAPI.Controllers
                 return Results.ValidationProblem(errorDictionary);
             }
 
-            var p = mapper.Map<ProducerVM, Producer>(producer);
+            var p = producerService.GetProducer(producer.Id); 
+            mapper.Map(producer, p);
             producerService.UpdateProducer(p);
             return Results.Ok();
         }
